@@ -38,7 +38,7 @@ feature -- Test: Parsing
 			create yaml.make
 			if attached yaml.parse ("42") as v then
 				assert_true ("is integer", v.is_integer)
-				assert_integers_equal ("value", 42, v.as_integer)
+				assert_integers_equal ("value", 42, v.as_integer.as_integer_32)
 			else
 				assert_false ("has errors", yaml.has_errors)
 			end

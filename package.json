@@ -1,0 +1,9 @@
+{
+  "name": "simple_yaml",
+  "version": "0.1.0",
+  "description": "Simple YAML 1.2 parser and writer for Eiffel",
+  "author": "Larry Rix",
+  "license": "MIT",
+  "category": "data-formats",
+  "keywords": ["yaml", "parser", "serialization", "config"]
+}

@@ -16,23 +16,70 @@ Part of the [Simple Eiffel](https://github.com/simple-eiffel) ecosystem.
 
 ## Status
 
-**Planned** - Backend for simple_codec
+**Production** - Full YAML 1.2 parser with dot-path access
 
 ## Overview
 
-Parses and writes [YAML](https://yaml.org/) format files.
+Parses and writes [YAML](https://yaml.org/) format files with convenient dot-path access.
+
+## Quick Start (Zero-Configuration)
+
+Use `SIMPLE_YAML_QUICK` for the simplest possible YAML operations:
+
+```eiffel
+local
+    yaml: SIMPLE_YAML_QUICK
+    config: YAML_VALUE
+do
+    create yaml.make
+
+    -- Load config file
+    config := yaml.load ("config.yml")
+
+    -- Get values with dot-path (like config files!)
+    host := yaml.get_string (config, "database.host")
+    port := yaml.get_integer (config, "database.port")
+    debug := yaml.get_boolean (config, "logging.debug")
+    timeout := yaml.get_real (config, "server.timeout")
+
+    -- Get string list
+    across yaml.get_list (config, "features.enabled") as f loop
+        print (f)
+    end
+
+    -- One-liner file access
+    host := yaml.string_from_file ("config.yml", "database.host")
+    port := yaml.integer_from_file ("config.yml", "database.port")
+
+    -- Check if key exists
+    if yaml.has_key (config, "database.ssl") then ...
+
+    -- Parse YAML string
+    config := yaml.parse (yaml_string)
+
+    -- Validation
+    if yaml.is_valid (yaml_string) then ...
+
+    -- Error handling
+    if yaml.has_error then
+        print (yaml.last_error)
+    end
+end
+```
+
+## Standard API (Full Control)
 
 ```eiffel
 yaml: SIMPLE_YAML
 data: YAML_MAPPING
 
-create yaml
+create yaml.make
 data := yaml.parse_file ("config.yaml")
 
 name := data.string_item ("name")
 ```
 
-## Features (Planned)
+## Features
 
 - YAML 1.2 spec compliance
 - Mappings and sequences
@@ -40,6 +87,7 @@ name := data.string_item ("name")
 - Multi-document support
 - Anchors and aliases
 - Flow and block styles
+- Dot-path access for config files
 
 ## License
 

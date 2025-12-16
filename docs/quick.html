@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMPLE_YAML_QUICK - Zero-Configuration YAML</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="images/logo.png" alt="simple_* logo" class="logo">
+        </div>
+        <h1>SIMPLE_YAML_QUICK</h1>
+        <p class="tagline">Zero-Configuration YAML for Beginners</p>
+        <div class="badges">
+            <span class="badge badge-version">v1.0.0</span>
+            <span class="badge badge-license">MIT</span>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#api">API Reference</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>
+                <strong>SIMPLE_YAML_QUICK</strong> provides one-liner YAML config file access with
+                dot-path notation. Perfect for reading configuration files like <code>database.host</code>.
+            </p>
+            <p>For YAML building and advanced features, use SIMPLE_YAML directly.</p>
+        </section>
+
+        <section id="quick-start">
+            <h2>Quick Start</h2>
+<pre><code><span class="keyword">local</span>
+    yaml: <span class="type">SIMPLE_YAML_QUICK</span>
+    config: <span class="type">YAML_VALUE</span>
+<span class="keyword">do</span>
+    <span class="keyword">create</span> yaml.make
+
+    <span class="comment">-- Load config file</span>
+    config := yaml.load (<span class="string">"config.yml"</span>)
+
+    <span class="comment">-- Get values with dot-path (like config files!)</span>
+    host := yaml.get_string (config, <span class="string">"database.host"</span>)
+    port := yaml.get_integer (config, <span class="string">"database.port"</span>)
+    debug := yaml.get_boolean (config, <span class="string">"logging.debug"</span>)
+    timeout := yaml.get_real (config, <span class="string">"server.timeout"</span>)
+
+    <span class="comment">-- Get string list</span>
+    <span class="keyword">across</span> yaml.get_list (config, <span class="string">"features.enabled"</span>) <span class="keyword">as</span> f <span class="keyword">loop</span>
+        print (f)
+    <span class="keyword">end</span>
+
+    <span class="comment">-- One-liner file access</span>
+    host := yaml.string_from_file (<span class="string">"config.yml"</span>, <span class="string">"database.host"</span>)
+    port := yaml.integer_from_file (<span class="string">"config.yml"</span>, <span class="string">"database.port"</span>)
+
+    <span class="comment">-- Check if key exists</span>
+    <span class="keyword">if</span> yaml.has_key (config, <span class="string">"database.ssl"</span>) <span class="keyword">then</span> ...
+
+    <span class="comment">-- Parse YAML string</span>
+    config := yaml.parse (yaml_string)
+
+    <span class="comment">-- Validation</span>
+    <span class="keyword">if</span> yaml.is_valid (yaml_string) <span class="keyword">then</span> ...
+
+    <span class="comment">-- Error handling</span>
+    <span class="keyword">if</span> yaml.has_error <span class="keyword">then</span>
+        print (yaml.last_error)
+    <span class="keyword">end</span>
+<span class="keyword">end</span></code></pre>
+        </section>
+
+        <section id="config-example">
+            <h2>Example Config File</h2>
+<pre><code><span class="comment"># config.yml</span>
+database:
+  host: localhost
+  port: 5432
+  name: myapp
+
+logging:
+  level: info
+  debug: false
+
+features:
+  enabled:
+    - auth
+    - cache
+    - api</code></pre>
+
+<pre><code><span class="comment">-- Access with dot-path</span>
+yaml.get_string (config, <span class="string">"database.host"</span>)     <span class="comment">-- "localhost"</span>
+yaml.get_integer (config, <span class="string">"database.port"</span>)    <span class="comment">-- 5432</span>
+yaml.get_boolean (config, <span class="string">"logging.debug"</span>)    <span class="comment">-- False</span>
+yaml.get_list (config, <span class="string">"features.enabled"</span>)    <span class="comment">-- ["auth", "cache", "api"]</span></code></pre>
+        </section>
+
+        <section id="api">
+            <h2>API Reference</h2>
+
+            <h3>Loading</h3>
+            <table>
+                <tr><th>Feature</th><th>Description</th></tr>
+                <tr><td><code>load (path)</code></td><td>Load YAML file</td></tr>
+                <tr><td><code>parse (yaml_string)</code></td><td>Parse YAML string</td></tr>
+            </table>
+
+            <h3>Dot-Path Getters</h3>
+            <table>
+                <tr><th>Feature</th><th>Description</th></tr>
+                <tr><td><code>get_string (value, path)</code></td><td>Get string at dot-path</td></tr>
+                <tr><td><code>get_integer (value, path)</code></td><td>Get integer at dot-path</td></tr>
+                <tr><td><code>get_real (value, path)</code></td><td>Get real number at dot-path</td></tr>
+                <tr><td><code>get_boolean (value, path)</code></td><td>Get boolean at dot-path</td></tr>
+                <tr><td><code>get_list (value, path)</code></td><td>Get string list at dot-path</td></tr>
+            </table>
+
+            <h3>One-Liner File Access</h3>
+            <table>
+                <tr><th>Feature</th><th>Description</th></tr>
+                <tr><td><code>string_from_file (path, key)</code></td><td>Load file and get string</td></tr>
+                <tr><td><code>integer_from_file (path, key)</code></td><td>Load file and get integer</td></tr>
+                <tr><td><code>boolean_from_file (path, key)</code></td><td>Load file and get boolean</td></tr>
+            </table>
+
+            <h3>Existence and Validation</h3>
+            <table>
+                <tr><th>Feature</th><th>Description</th></tr>
+                <tr><td><code>has_key (value, path)</code></td><td>Does path exist?</td></tr>
+                <tr><td><code>is_valid (yaml_string)</code></td><td>Is string valid YAML?</td></tr>
+                <tr><td><code>has_error</code></td><td>Did last operation fail?</td></tr>
+                <tr><td><code>last_error</code></td><td>Last error message</td></tr>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>Part of the <a href="https://github.com/simple-eiffel">Simple Eiffel</a> ecosystem</p>
+    </footer>
+</body>
+</html>

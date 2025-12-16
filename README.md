@@ -18,6 +18,18 @@ Part of the [Simple Eiffel](https://github.com/simple-eiffel) ecosystem.
 
 **Production** - Full YAML 1.2 parser with dot-path access
 
+## Installation
+
+Set the ecosystem environment variable (one-time setup for all simple_* libraries):
+```
+SIMPLE_EIFFEL=D:\prod
+```
+
+Add to your ECF:
+```xml
+<library name="simple_yaml" location="$SIMPLE_EIFFEL/simple_yaml/simple_yaml.ecf"/>
+```
+
 ## Overview
 
 Parses and writes [YAML](https://yaml.org/) format files with convenient dot-path access.

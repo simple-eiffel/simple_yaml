@@ -235,4 +235,54 @@ feature -- Path queries
 			end
 		end
 
+feature {NONE} -- Type references (for `like` anchors only)
+
+	yaml_value_typeref: detachable YAML_VALUE
+		require
+			type_ref_only_never_call: False
+		attribute
+		end
+
+	yaml_mapping_typeref: detachable YAML_MAPPING
+		require
+			type_ref_only_never_call: False
+		attribute
+		end
+
+	yaml_sequence_typeref: detachable YAML_SEQUENCE
+		require
+			type_ref_only_never_call: False
+		attribute
+		end
+
+	yaml_string_typeref: detachable YAML_STRING
+		require
+			type_ref_only_never_call: False
+		attribute
+		end
+
+	yaml_integer_typeref: detachable YAML_INTEGER
+		require
+			type_ref_only_never_call: False
+		attribute
+		end
+
+	yaml_float_typeref: detachable YAML_FLOAT
+		require
+			type_ref_only_never_call: False
+		attribute
+		end
+
+	yaml_boolean_typeref: detachable YAML_BOOLEAN
+		require
+			type_ref_only_never_call: False
+		attribute
+		end
+
+	yaml_null_typeref: detachable YAML_NULL
+		require
+			type_ref_only_never_call: False
+		attribute
+		end
+
 end

@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			-- Create quick YAML facade.
 		do
 			create yaml.make
-			create logger.make ("yaml_quick")
+			
 			last_error := ""
 		ensure
 			yaml_exists: yaml /= Void
@@ -47,12 +47,10 @@ feature -- Loading
 		require
 			path_not_empty: not a_path.is_empty
 		do
-			logger.debug_log ("Loading YAML: " + a_path)
 			last_error := ""
 			Result := yaml.parse_file (a_path)
 			if Result = Void and then yaml.has_errors then
 				last_error := yaml.errors_as_string.to_string_8
-				logger.error ("Load error: " + last_error)
 			end
 		end
 
@@ -61,7 +59,6 @@ feature -- Loading
 		require
 			yaml_not_empty: not a_yaml.is_empty
 		do
-			logger.debug_log ("Parsing YAML (" + a_yaml.count.out + " chars)")
 			last_error := ""
 			Result := yaml.parse (a_yaml.to_string_32)
 			if Result = Void and then yaml.has_errors then
@@ -114,7 +111,7 @@ feature -- Dot-Path Getters (config file style)
 				end
 			end
 			if attached {YAML_INTEGER} l_current as vi then
-				Result := vi.value
+				Result := vi.value.to_integer_32
 			end
 		end
 
@@ -285,12 +282,9 @@ feature -- Advanced Access
 
 feature {NONE} -- Implementation
 
-	logger: SIMPLE_LOGGER
-			-- Logger for debugging.
 
 invariant
 	yaml_exists: yaml /= Void
-	logger_exists: logger /= Void
 	last_error_exists: last_error /= Void
 
 end

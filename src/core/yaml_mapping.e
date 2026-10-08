@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 			end
 
 			if l_needs_quoting then
-				Result := "%"" + a_key + "%""
+				Result := {STRING_32} "%"" + a_key + {STRING_32} "%""
 			else
 				Result := a_key
 			end

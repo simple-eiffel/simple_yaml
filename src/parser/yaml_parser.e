@@ -122,7 +122,7 @@ feature {NONE} -- Parsing implementation
 			when {YAML_TOKEN}.Token_eof, {YAML_TOKEN}.Token_doc_end then
 				Result := Void
 			else
-				add_error ("Unexpected token: " + l_token.debug_output)
+				add_error ({STRING_32} "Unexpected token: " + l_token.debug_output)
 				Result := Void
 			end
 		end

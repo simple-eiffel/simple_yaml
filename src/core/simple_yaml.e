@@ -79,7 +79,7 @@ feature -- Parsing
 				l_file.close
 				Result := parse (l_content)
 			else
-				last_errors.extend ("Cannot read file: " + a_file_path)
+				last_errors.extend ({STRING_32} "Cannot read file: " + a_file_path)
 			end
 		end
 
@@ -118,7 +118,7 @@ feature -- Generation
 			l_file.close
 			Result := True
 		rescue
-			last_errors.extend ("Failed to write file: " + a_file_path)
+			last_errors.extend ({STRING_32} "Failed to write file: " + a_file_path)
 			Result := False
 		end
 

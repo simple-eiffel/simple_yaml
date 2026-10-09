@@ -44,6 +44,8 @@ feature {NONE} -- Test Runners
 			run_test (agent lib_tests.test_to_yaml_integer, "test_to_yaml_integer")
 			run_test (agent lib_tests.test_to_yaml_boolean, "test_to_yaml_boolean")
 			run_test (agent lib_tests.test_has_errors, "test_has_errors")
+			run_test (agent lib_tests.test_round_trip_strings, "test_round_trip_strings")
+			run_test (agent lib_tests.test_round_trip_empty_collections, "test_round_trip_empty_collections")
 		end
 
 feature {NONE} -- Implementation

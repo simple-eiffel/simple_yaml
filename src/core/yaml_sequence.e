@@ -221,6 +221,10 @@ feature -- Output
 			create Result.make (200)
 			create l_indent_str.make_filled (' ', a_indent)
 
+			if is_empty then
+				Result.append ("[]%N")
+			end
+
 			from
 				i := 1
 			until
@@ -228,7 +232,10 @@ feature -- Output
 			loop
 				Result.append (l_indent_str)
 				Result.append ("- ")
-				if item (i).is_mapping or item (i).is_sequence then
+				if is_empty_collection (item (i)) then
+					Result.append (item (i).to_yaml)
+					Result.append_character ('%N')
+				elseif item (i).is_mapping or item (i).is_sequence then
 					Result.append_character ('%N')
 					Result.append (item (i).to_yaml_indented (a_indent + 2))
 				else
@@ -236,6 +243,18 @@ feature -- Output
 					Result.append_character ('%N')
 				end
 				i := i + 1
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	is_empty_collection (a_value: YAML_VALUE): BOOLEAN
+			-- Is `a_value` an empty mapping or an empty sequence?
+		do
+			if a_value.is_mapping then
+				Result := a_value.as_mapping.is_empty
+			elseif a_value.is_sequence then
+				Result := a_value.as_sequence.is_empty
 			end
 		end
 

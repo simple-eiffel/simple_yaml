@@ -112,14 +112,14 @@ feature {NONE} -- Implementation
 					Result := True
 				end
 
-				-- Check for special values
+				-- Check for special values (case-insensitive) and number look-alikes
 				if not Result then
-					if value.same_string ("true") or value.same_string ("false") or
-					   value.same_string ("null") or value.same_string ("~") or
-					   value.same_string ("yes") or value.same_string ("no") or
-					   value.same_string ("on") or value.same_string ("off") then
-						Result := True
-					end
+					Result := is_reserved_word or looks_like_number
+				end
+
+				-- Leading or trailing space would be lost by a plain scalar
+				if not Result then
+					Result := value [1] = ' ' or value [value.count] = ' '
 				end
 
 				-- Check for special characters in content
@@ -130,12 +130,73 @@ feature {NONE} -- Implementation
 						i > value.count or Result
 					loop
 						c := value [i]
-						if c = ':' or c = '#' or c = '%N' or c = '%R' then
+						if c = ':' or c = '#' or c = '%N' or c = '%R' or c = '%T' then
 							Result := True
 						end
 						i := i + 1
 					end
 				end
+			end
+		end
+
+	is_reserved_word: BOOLEAN
+			-- Would a plain `value` re-read as boolean or null?
+		local
+			l_lower: STRING_32
+		do
+			l_lower := value.as_lower
+			Result := l_lower.same_string ("true") or l_lower.same_string ("false") or
+				l_lower.same_string ("null") or l_lower.same_string ("~") or
+				l_lower.same_string ("yes") or l_lower.same_string ("no") or
+				l_lower.same_string ("on") or l_lower.same_string ("off") or
+				l_lower.same_string ("y") or l_lower.same_string ("n")
+		end
+
+	looks_like_number: BOOLEAN
+			-- Would a plain `value` re-read as a number (int, float, 0x/0o, inf, nan)?
+		local
+			l_lower: STRING_32
+			i, l_digits, l_start: INTEGER
+			l_seen_dot, l_seen_exp, l_ok: BOOLEAN
+			c: CHARACTER_32
+		do
+			l_lower := value.as_lower
+			if l_lower.same_string (".inf") or l_lower.same_string ("-.inf") or
+				l_lower.same_string ("+.inf") or l_lower.same_string (".nan") or
+				l_lower.same_string ("inf") or l_lower.same_string ("nan") then
+				Result := True
+			elseif l_lower.count > 2 and then l_lower [1] = '0' and then (l_lower [2] = 'x' or l_lower [2] = 'o') then
+				Result := True
+			else
+				l_start := 1
+				if l_lower [1] = '+' or l_lower [1] = '-' then
+					l_start := 2
+				end
+				l_ok := l_start <= l_lower.count
+				from
+					i := l_start
+				until
+					i > l_lower.count or not l_ok
+				loop
+					c := l_lower [i]
+					if c >= '0' and c <= '9' then
+						l_digits := l_digits + 1
+					elseif c = '.' and not l_seen_dot and not l_seen_exp then
+						l_seen_dot := True
+					elseif c = 'e' and not l_seen_exp and l_digits > 0 then
+						l_seen_exp := True
+						if i < l_lower.count and then (l_lower [i + 1] = '+' or l_lower [i + 1] = '-') then
+							i := i + 1
+						end
+						if i = l_lower.count then
+							l_ok := False
+						end
+					else
+						l_ok := False
+					end
+					i := i + 1
+				end
+				Result := l_ok and l_digits > 0
 			end
 		end
 

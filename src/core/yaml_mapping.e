@@ -318,6 +318,10 @@ feature -- Output
 			create Result.make (500)
 			create l_indent_str.make_filled (' ', a_indent)
 
+			if is_empty then
+				Result.append ("{}%N")
+			end
+
 			across key_order as ic loop
 				l_key := ic
 				Result.append (l_indent_str)
@@ -325,7 +329,10 @@ feature -- Output
 				Result.append (": ")
 
 				if attached item (l_key) as l_val then
-					if l_val.is_mapping or l_val.is_sequence then
+					if is_empty_collection (l_val) then
+						Result.append (l_val.to_yaml)
+						Result.append_character ('%N')
+					elseif l_val.is_mapping or l_val.is_sequence then
 						Result.append_character ('%N')
 						Result.append (l_val.to_yaml_indented (a_indent + 2))
 					else
@@ -339,6 +346,16 @@ feature -- Output
 		end
 
 feature {NONE} -- Implementation
+
+	is_empty_collection (a_value: YAML_VALUE): BOOLEAN
+			-- Is `a_value` an empty mapping or an empty sequence?
+		do
+			if a_value.is_mapping then
+				Result := a_value.as_mapping.is_empty
+			elseif a_value.is_sequence then
+				Result := a_value.as_sequence.is_empty
+			end
+		end
 
 	quote_key_if_needed (a_key: STRING_32): STRING_32
 			-- Quote key if it contains special characters

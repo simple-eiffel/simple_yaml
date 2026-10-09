@@ -189,6 +189,27 @@ feature -- Test: Round trip
 			assert_true ("empty top sequence", yaml.to_yaml (l_seq).same_string ({STRING_32} "[]%N"))
 		end
 
+	test_block_parents_have_no_trailing_space
+			-- A key or dash that introduces a block child ends its line with no trailing space.
+		local
+			yaml: SIMPLE_YAML
+			l_root, l_child: YAML_MAPPING
+			l_seq: YAML_SEQUENCE
+			l_out: STRING_32
+		do
+			create yaml.make
+			l_root := yaml.new_mapping
+			l_child := yaml.new_mapping.with_string ("name", "web")
+			l_root.put (l_child, "metadata")
+			create l_seq.make
+			l_seq.extend (l_child)
+			l_root.put (l_seq, "items")
+			l_out := yaml.to_yaml (l_root)
+			assert_false ({STRING_32} "no space before newline: " + l_out, l_out.has_substring (" %N"))
+			assert_true ("metadata line", l_out.has_substring ("metadata:%N"))
+			assert_true ("dash line", l_out.has_substring ("-%N"))
+		end
+
 feature -- Test: Generation
 
 	test_to_yaml_string

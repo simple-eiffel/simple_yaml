@@ -236,6 +236,7 @@ feature -- Output
 					Result.append (item (i).to_yaml)
 					Result.append_character ('%N')
 				elseif item (i).is_mapping or item (i).is_sequence then
+					Result.remove_tail (1) -- no trailing space after the separator
 					Result.append_character ('%N')
 					Result.append (item (i).to_yaml_indented (a_indent + 2))
 				else

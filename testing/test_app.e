@@ -46,6 +46,7 @@ feature {NONE} -- Test Runners
 			run_test (agent lib_tests.test_has_errors, "test_has_errors")
 			run_test (agent lib_tests.test_round_trip_strings, "test_round_trip_strings")
 			run_test (agent lib_tests.test_round_trip_empty_collections, "test_round_trip_empty_collections")
+			run_test (agent lib_tests.test_block_parents_have_no_trailing_space, "test_block_parents_have_no_trailing_space")
 		end
 
 feature {NONE} -- Implementation

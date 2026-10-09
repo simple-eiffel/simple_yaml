@@ -333,6 +333,7 @@ feature -- Output
 						Result.append (l_val.to_yaml)
 						Result.append_character ('%N')
 					elseif l_val.is_mapping or l_val.is_sequence then
+						Result.remove_tail (1) -- no trailing space after the separator
 						Result.append_character ('%N')
 						Result.append (l_val.to_yaml_indented (a_indent + 2))
 					else
